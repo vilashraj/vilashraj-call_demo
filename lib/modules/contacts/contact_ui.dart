@@ -2,6 +2,7 @@ import 'package:call_demo/modules/contacts/add_contact_ui.dart';
 import 'package:call_demo/modules/contacts/bloc/contact_bloc.dart';
 import 'package:call_demo/modules/contacts/bloc/contact_event.dart';
 import 'package:call_demo/modules/contacts/bloc/contact_vm.dart';
+import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +22,11 @@ class _ContactUiState extends State<ContactUi> {
   TextEditingController searchController = TextEditingController();
   bool isSearching = false;
   int _selectedIndexValue = 0;
+
+  bool isFirstTime = true;
+  List<ContactVm> contactSectionList = [];
+  List<ContactVm> duplicateContactSectionList = [];
+  List<ContactVm> unTouchedContactSectionList = [];
 
   @override
   void initState() {
@@ -63,7 +69,12 @@ class _ContactUiState extends State<ContactUi> {
           ),
 
         ),
-        onChanged: (value){},
+        onChanged: (value){
+//          setState(() {
+            filterContacts(value);
+
+//          });
+        }
       ),
       actions: <Widget>[
         IconButton(icon: Icon(Icons.close,color: Colors.black,), onPressed: (){
@@ -124,11 +135,20 @@ class _ContactUiState extends State<ContactUi> {
       bloc:contactBloc,
       builder: (context,ContactState state){
         if(state is ContactLoaded){
+          if(isFirstTime){
+            contactSectionList.clear();
+            contactSectionList.addAll(state.contacts);
+            duplicateContactSectionList.clear();
+            duplicateContactSectionList.addAll(state.contacts);
+            unTouchedContactSectionList.clear();
+            unTouchedContactSectionList.addAll(state.contacts);
+            isFirstTime = false;
+          }
           return ListView.builder(
-              itemCount: state.contacts.length,
+              itemCount: contactSectionList.length,
               controller: scrollController,
               itemBuilder: (context, int position){
-                return sectionView(state.contacts[position]);
+                return sectionView(contactSectionList[position]);
           });
         }
         else if(state is ContactError){
@@ -149,7 +169,7 @@ class _ContactUiState extends State<ContactUi> {
 
   Widget sectionView(ContactVm contactVm){
     return StickyHeader(
-      header:Container(
+      header:isSearching?Divider():Container(
         height: 40.0,
         color: Colors.grey[300],
         padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -190,4 +210,47 @@ class _ContactUiState extends State<ContactUi> {
   Widget getLdapContactList(){
     return Container();
   }
+
+
+  filterContacts(String query){
+    if(query != null && query != ""){
+    List<ContactVm> dummyContactVm = [];
+    List<ContactVm> duplicateDummy = [];
+    duplicateDummy.addAll(duplicateContactSectionList);
+    duplicateDummy.forEach((j){
+      List<Contact> dummyContact = [];
+      List<Contact> duplicateDummyContact = [];
+      duplicateDummyContact.addAll(j.contact);
+
+      duplicateDummyContact.forEach((i){
+        if(i.givenName != null && i.givenName.toLowerCase().contains(query.toLowerCase())){
+          dummyContact.add(i);
+        }
+      });
+      if(dummyContact.isNotEmpty){
+          duplicateDummyContact.clear();
+          duplicateDummyContact.addAll(dummyContact);
+          ContactVm obj = ContactVm();
+          obj.title = j.title;
+          obj.contact = duplicateDummyContact;
+          dummyContactVm.add(obj);
+      }
+
+
+    });
+      setState(() {
+        contactSectionList.clear();
+        contactSectionList.addAll(dummyContactVm);
+      });
+    }
+    else{
+      setState(() {
+        contactSectionList.clear();
+        contactSectionList.addAll(unTouchedContactSectionList);
+        isFirstTime = true;
+      });
+    }
+  }
+
+
 }

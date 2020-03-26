@@ -1,4 +1,7 @@
+import 'package:call_demo/modules/contacts/bloc/phone_field_dm.dart';
+import 'package:call_demo/modules/contacts/phone_type_list_ui.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class AddContactUI extends StatefulWidget {
@@ -7,39 +10,46 @@ class AddContactUI extends StatefulWidget {
 }
 
 class _AddContactUIState extends State<AddContactUI> {
-
-  Map sipNumberMap = {0:""};
-  Map phoneNumberMap = {0:""};
+  Map sipNumberMap = {0: ""};
+  Map<int, PhoneFieldDm> phoneNumberMap = {
+    0: PhoneFieldDm(phoneNumber: "", phoneType: PhoneType.iPhone)
+  };
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: getAppBar(),
-      body:getBody()
-    );
+    return Scaffold(appBar: getAppBar(), body: getBody());
   }
 
-  Widget getAppBar(){
+  Widget getAppBar() {
     return AppBar(
       brightness: Brightness.light,
       backgroundColor: Colors.grey[200],
       leading: IconButton(
-        icon:Icon(Icons.close,color: Theme.of(context).primaryColor,),
-        onPressed: (){
+        icon: Icon(
+          Icons.close,
+          color: Theme.of(context).primaryColor,
+        ),
+        onPressed: () {
           Navigator.of(context).maybePop();
         },
       ),
-      title: Text("New Contact",style: TextStyle(color: Colors.black),),
+      title: Text(
+        "New Contact",
+        style: TextStyle(color: Colors.black),
+      ),
       actions: <Widget>[
         IconButton(
-          icon:Icon(Icons.check,color: Theme.of(context).primaryColor,),
-          onPressed: (){},
+          icon: Icon(
+            Icons.check,
+            color: Theme.of(context).primaryColor,
+          ),
+          onPressed: () {},
         )
       ],
     );
   }
 
-  Widget getBody(){
+  Widget getBody() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
@@ -52,76 +62,80 @@ class _AddContactUIState extends State<AddContactUI> {
         ),
       ),
     );
-
   }
 
-  Widget profilePicRow(){
+  Widget profilePicRow() {
     return Row(
       children: <Widget>[
         Expanded(
-          flex:2,
-          child: CircleAvatar(
-            radius: 30,
-            child: Center(child: Icon(CupertinoIcons.person_solid,size: 48,color: Colors.grey[600],)),
-            backgroundColor: Colors.grey[200],
-          )
-        ),
+            flex: 2,
+            child: CircleAvatar(
+              radius: 30,
+              child: Center(
+                  child: Icon(
+                CupertinoIcons.person_solid,
+                size: 48,
+                color: Colors.grey[600],
+              )),
+              backgroundColor: Colors.grey[200],
+            )),
         Expanded(
-          flex:8,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-             children: <Widget>[
-              TextField(
-              decoration: InputDecoration(
-                //Add th Hint text here.
-                hintText: "First Name",
-                border: UnderlineInputBorder(),
-                  contentPadding: EdgeInsets.zero
-
-              ),
-
-            ),
-              TextField(
-
-              decoration: InputDecoration(
-                //Add th Hint text here.
-                hintText: "Last Name",
-                border: UnderlineInputBorder(),
-                contentPadding: EdgeInsets.zero
-              ),
-
-            ),
-        ]),
-          )),
+            flex: 8,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(children: <Widget>[
+                TextField(
+                  decoration: InputDecoration(
+                      //Add th Hint text here.
+                      hintText: "First Name",
+                      border: UnderlineInputBorder(),
+                      contentPadding: EdgeInsets.zero),
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                      //Add th Hint text here.
+                      hintText: "Last Name",
+                      border: UnderlineInputBorder(),
+                      contentPadding: EdgeInsets.zero),
+                ),
+              ]),
+            )),
       ],
     );
   }
 
-  Widget sipNumberSection(){
+  Widget sipNumberSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("SIP Number",style: TextStyle(color: Theme.of(context).primaryColor),),
-        Container(height:1.0,color: Theme.of(context).primaryColor,),
+        Text(
+          "SIP Number",
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
+        Container(
+          height: 1.0,
+          color: Theme.of(context).primaryColor,
+        ),
         ListView.builder(
-          shrinkWrap: true,
+            shrinkWrap: true,
             itemCount: sipNumberMap.length,
-            itemBuilder: (context,int position){
-          return sipField(position);
-        }),
+            itemBuilder: (context, int position) {
+              return sipField(position);
+            }),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
-            onTap: (){
+            onTap: () {
               setState(() {
                 sipNumberMap[sipNumberMap.length] = "";
               });
             },
             child: Row(
               children: <Widget>[
-                Icon(Icons.add_circle,color: Colors.green,),
-
+                Icon(
+                  Icons.add_circle,
+                  color: Colors.green,
+                ),
                 SizedBox(width: 8.0),
                 Text("Add New Item"),
               ],
@@ -133,38 +147,44 @@ class _AddContactUIState extends State<AddContactUI> {
     );
   }
 
-  Widget sipField(int position){
+  Widget sipField(int position) {
     TextEditingController sipController = TextEditingController();
     sipController.text = sipNumberMap[position];
-    return  Column(
+    return Column(
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: <Widget>[
-              IconButton(icon:Icon(Icons.remove_circle,color: Colors.red,),onPressed: (){
-                setState(() {
-                  sipNumberMap.remove(position);
-                  print(sipNumberMap);
-                  Map newMap = {};
-                  int count = 0;
+              GestureDetector(
+                  onTap: (){
+                    setState(() {
+                      sipNumberMap.remove(position);
+                      print(sipNumberMap);
+                      Map newMap = {};
+                      int count = 0;
 
-                  sipNumberMap.forEach((k,v){
-                    newMap[count] = v;
-                    count++;
-                  });
-                  sipNumberMap = newMap;
+                      sipNumberMap.forEach((k, v) {
+                        newMap[count] = v;
+                        count++;
+                      });
+                      sipNumberMap = newMap;
+                    });
+                  },
+                  child: Icon(
+                    Icons.remove_circle,
+                    color: Colors.red,
+                  ),
+                ),
 
-                });
-              },),
+
               SizedBox(width: 8.0),
               Text("SIP Number"),
               SizedBox(width: 8.0),
-
               Expanded(
-                child: SipTextField(
-                  sipController: sipController,
-                  onChange: (value){
+                child: ContactTextField(
+                  contactController: sipController,
+                  onChange: (value) {
                     setState(() {
                       sipNumberMap[position] = value;
                     });
@@ -175,26 +195,43 @@ class _AddContactUIState extends State<AddContactUI> {
           ),
         ),
         Divider(),
-
       ],
     );
   }
-  Widget phoneNumberSection(){
+
+  Widget phoneNumberSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text("Phone",style: TextStyle(color: Theme.of(context).primaryColor),),
-        Container(height:1.0,color: Theme.of(context).primaryColor,),
+        Text(
+          "Phone",
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
+        Container(
+          height: 1.0,
+          color: Theme.of(context).primaryColor,
+        ),
+        ListView.builder(
+            shrinkWrap: true,
+            itemCount: phoneNumberMap.length,
+            itemBuilder: (context, int position) {
+              return phoneNumberField(position);
+            }),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
-            onTap: (){
-
+            onTap: () {
+              setState(() {
+                phoneNumberMap[phoneNumberMap.length] =
+                    PhoneFieldDm(phoneType: PhoneType.iPhone, phoneNumber: "");
+              });
             },
             child: Row(
               children: <Widget>[
-                Icon(Icons.add_circle,color: Colors.green,),
-
+                Icon(
+                  Icons.add_circle,
+                  color: Colors.green,
+                ),
                 SizedBox(width: 8.0),
                 Text("Add New Item"),
               ],
@@ -205,31 +242,95 @@ class _AddContactUIState extends State<AddContactUI> {
       ],
     );
   }
+
+  Widget phoneNumberField(int position) {
+    TextEditingController phoneFieldController = TextEditingController();
+    phoneFieldController.text = phoneNumberMap[position].phoneNumber;
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: <Widget>[
+              GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      phoneNumberMap.remove(position);
+                      Map<int, PhoneFieldDm> newMap = {};
+                      int count = 0;
+
+                      phoneNumberMap.forEach((k, v) {
+                        newMap[count] = v;
+                        count++;
+                      });
+                      phoneNumberMap = newMap;
+                      ;
+                    });
+                  },
+                  child: Icon(
+                    Icons.remove_circle,
+                    color: Colors.red,
+                  )),
+              SizedBox(width: 8.0),
+              GestureDetector(
+                onTap: ()async{
+                  PhoneType pType = await Navigator.of(context).push(MaterialPageRoute(builder:(context){
+                    return PhoneTypeListUI(phoneNumberMap[position].phoneType);
+                  }));
+
+                  if(pType != null){
+                    setState(() {
+                      phoneNumberMap[position].phoneType = pType;
+                    });
+                  }
+                },
+                  child: Text(describeEnum(phoneNumberMap[position].phoneType,),style: TextStyle(color:Colors.blue),)),
+              SizedBox(width: 2.0),
+              Icon(Icons.arrow_forward_ios,color: Colors.grey[300],size: 12,),
+              SizedBox(width: 2.0),
+              Container(height:20.0,width: 1.0,color: Colors.grey[300],),
+              SizedBox(width: 8.0),
+              Expanded(
+                child: ContactTextField(
+                  contactController: phoneFieldController,
+                  onChange: (value) {
+                    setState(() {
+                      phoneNumberMap[position].phoneNumber = value;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        Divider(),
+      ],
+    );
+  }
 }
 
-
-class SipTextField extends StatefulWidget {
+class ContactTextField extends StatefulWidget {
   Function onChange;
-  TextEditingController sipController;
-  SipTextField({this.onChange,this.sipController});
+  TextEditingController contactController;
+
+  ContactTextField({this.onChange, this.contactController});
+
   @override
-  _SipTextFieldState createState() => _SipTextFieldState();
+  _ContactTextFieldState createState() => _ContactTextFieldState();
 }
 
-class _SipTextFieldState extends State<SipTextField> {
+class _ContactTextFieldState extends State<ContactTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: widget.sipController,
-      onChanged: (value){
+      controller: widget.contactController,
+      onChanged: (value) {
         setState(() {
           widget.onChange(value);
         });
       },
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.zero,
-          border: UnderlineInputBorder()
-      ),
+          contentPadding: EdgeInsets.zero, border: UnderlineInputBorder()),
     );
   }
 }

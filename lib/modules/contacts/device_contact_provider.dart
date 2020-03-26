@@ -10,4 +10,7 @@ class DeviceContactProvider{
     return contactList;
 
   }
+
+  deleteContact()async{
+  }
 }

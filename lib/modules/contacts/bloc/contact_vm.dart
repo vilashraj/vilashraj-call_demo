@@ -6,3 +6,4 @@ class ContactVm{
 
   ContactVm({this.title,this.contact});
 }
+
