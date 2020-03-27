@@ -1,5 +1,8 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:call_demo/modules/conference/conference_ui.dart';
 import 'package:call_demo/modules/contacts/contact_ui.dart';
+import 'package:call_demo/modules/contacts/device_contact_provider.dart';
+import 'package:call_demo/modules/keypad/keypad_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,7 +32,10 @@ class _DashboardState extends State<Dashboard> {
     return BottomNavyBar(
       selectedIndex: _selectedIndex,
       showElevation: true,
-      onItemSelected: (value){
+      onItemSelected: (value)async{
+        if(value == 2){
+          await DeviceContactProvider().getAllDeviceContact();
+        }
         setState(() {
           _selectedIndex = value;
         });
@@ -48,13 +54,13 @@ class _DashboardState extends State<Dashboard> {
       ),
       BottomNavyBarItem(
           icon: Icon(CupertinoIcons.group_solid),
-          title: Text('Conf'),
+          title: Text('Conference'),
           inactiveColor: Colors.grey
 
       ),
       BottomNavyBarItem(
-          icon: Icon(Icons.dialpad),
-          title: Text('Keypad'),
+          icon: Icon(Icons.access_time),
+          title: Text('Recents'),
           inactiveColor: Colors.grey
 
       ),
@@ -75,6 +81,8 @@ class _DashboardState extends State<Dashboard> {
   getBody(){
     switch(_selectedIndex){
       case 0: return ContactUi();
+      case 1: return ConferenceUI();
+      case 2: return KeyPadUI();
       default: return Container(
         child: Center(
           child: Text("Hello"),

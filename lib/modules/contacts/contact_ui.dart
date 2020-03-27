@@ -6,6 +6,7 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 
 import 'bloc/contact_state.dart';
@@ -203,7 +204,38 @@ class _ContactUiState extends State<ContactUi> {
 
   /// SIP
   Widget getSipContactList(){
-    return Container();
+    return Center(
+      child: CircularPercentIndicator(
+       radius: 240.0,
+       lineWidth: 20.0,
+       animation: true,
+       percent: 0.7,
+       circularStrokeCap: CircularStrokeCap.round,
+       progressColor: Colors.red,
+        backgroundColor: Colors.red[200],
+        center: CircularPercentIndicator(
+          circularStrokeCap: CircularStrokeCap.round,
+          backgroundColor: Colors.yellow[200],
+          progressColor: Colors.amber,
+          animation: true,
+          radius:200,
+          percent: 0.4,
+          lineWidth: 20,
+          center: CircularPercentIndicator(
+            circularStrokeCap: CircularStrokeCap.round,
+            backgroundColor: Colors.green[200],
+            progressColor: Colors.green,
+            animation: true,
+            radius:160,
+            percent: 0.5,
+            lineWidth: 20,
+
+          ),
+
+        ),
+
+        ),
+    );
   }
 
   /// LDAP
