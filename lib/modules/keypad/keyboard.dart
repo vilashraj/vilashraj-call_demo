@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Keyboard extends StatefulWidget {
@@ -94,7 +95,6 @@ class _KeyboardState extends State<Keyboard> {
             setState(() {
               widget.phoneNumberDialed = widget.phoneNumberDialed + title;
               widget.getCurrentText(widget.phoneNumberDialed);
-
             });
           },
           child: Container(
@@ -121,7 +121,44 @@ class _KeyboardState extends State<Keyboard> {
         padding: const EdgeInsets.all(2.0),
         child: GestureDetector(
           onTap: (){
+            showCupertinoModalPopup(context: context, builder: (context){
+              return CupertinoActionSheet(
 
+                actions: <Widget>[
+                  CupertinoActionSheetAction(
+                    child: Text("Video Call"),
+                    onPressed: () {
+                      print("Action 1 is been clicked");
+                    },
+                  ),
+                  CupertinoActionSheetAction(
+                    child: Text("Local Call"),
+                    onPressed: () {
+                      print("Action 2 is been clicked");
+                    },
+                  ),
+                  CupertinoActionSheetAction(
+                    child: Text("Paging"),
+                    onPressed: () {
+                      print("Action 2 is been clicked");
+                    },
+                  ),
+                  CupertinoActionSheetAction(
+                    child: Text("Add to Contacts"),
+                    onPressed: () {
+                      print("Action 2 is been clicked");
+                    },
+                  ),
+                ],
+                cancelButton: CupertinoActionSheetAction(
+                  isDefaultAction: true,
+                  child: Text("Cancel"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              );
+            });
           },
           child: Container(
             color: Colors.green,

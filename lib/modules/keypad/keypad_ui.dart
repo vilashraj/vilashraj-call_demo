@@ -3,6 +3,7 @@ import 'package:call_demo/modules/keypad/disable_textfield.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'keyboard.dart';
 
@@ -118,25 +119,86 @@ class _KeyPadUIState extends State<KeyPadUI> {
             child: ListView.separated(
                 controller: recentController,
                 itemBuilder: (context, int position) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          contacts[position].givenName == ""
-                              ? contacts[position].phones.toList()[0].value
-                              : contacts[position].givenName,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
+                  return GestureDetector(
+                    onTap: (){
+                      showCupertinoModalPopup(context: context, builder: (context){
+                        return CupertinoActionSheet(
+
+                          actions: <Widget>[
+                            CupertinoActionSheetAction(
+                              child: Text("Dial"),
+                              onPressed: () {
+                                print("Action 1 is been clicked");
+                              },
+                            ),
+                            CupertinoActionSheetAction(
+                              child: Text("Local Call"),
+                              onPressed: () {
+//                                Navigator.of(context).pop();
+                                launch("tel://${getPhoneText(contacts[position].phones.toList()[0].value)}");
+                              },
+                            ),
+                            CupertinoActionSheetAction(
+                              child: Text("Paging"),
+                              onPressed: () {
+                                print("Action 2 is been clicked");
+                              },
+                            ),
+                            CupertinoActionSheetAction(
+                              child: Text("Edit Before Dial"),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                setState(() {
+                                  phoneNumberDialed = getPhoneText(contacts[position].phones.toList()[0].value);
+                                });
+                                showModalBottomSheet(
+                                    context: context,
+                                    builder: (context) {
+                                      return Keyboard(phoneNumberDialed, (value) {
+                                        setState(() {
+                                          searchFilter(value);
+
+                                          phoneNumberDialed = value;
+                                        });
+                                      });
+                                    });
+                              },
+                            ),
+                          ],
+                          cancelButton: CupertinoActionSheetAction(
+                            isDefaultAction: true,
+                            child: Text("Cancel"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        );
+                      });
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.transparent,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              contacts[position].givenName == ""
+                                  ? contacts[position].phones.toList().isEmpty?"":contacts[position].phones.toList()[0].value
+                                  : contacts[position].givenName,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16),
+                            ),
+                            getPhoneRichText(
+                              getPhoneText(
+                                  contacts[position].phones.toList().isEmpty?"":contacts[position].phones.toList()[0].value),
+                            ),
+                          ],
                         ),
-                        getPhoneRichText(
-                          getPhoneText(
-                              contacts[position].phones.toList()[0].value),
-                        ),
-                      ],
+                      ),
                     ),
                   );
                 },

@@ -3,6 +3,8 @@ import 'package:call_demo/modules/conference/conference_ui.dart';
 import 'package:call_demo/modules/contacts/contact_ui.dart';
 import 'package:call_demo/modules/contacts/device_contact_provider.dart';
 import 'package:call_demo/modules/keypad/keypad_ui.dart';
+import 'package:call_demo/modules/messages/messages.dart';
+import 'package:call_demo/modules/settings/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -83,6 +85,8 @@ class _DashboardState extends State<Dashboard> {
       case 0: return ContactUi();
       case 1: return ConferenceUI();
       case 2: return KeyPadUI();
+      case 3: return MessagesUI();
+      case 4: return SettingsUI();
       default: return Container(
         child: Center(
           child: Text("Hello"),

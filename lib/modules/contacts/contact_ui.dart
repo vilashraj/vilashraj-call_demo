@@ -204,38 +204,7 @@ class _ContactUiState extends State<ContactUi> {
 
   /// SIP
   Widget getSipContactList(){
-    return Center(
-      child: CircularPercentIndicator(
-       radius: 240.0,
-       lineWidth: 20.0,
-       animation: true,
-       percent: 0.7,
-       circularStrokeCap: CircularStrokeCap.round,
-       progressColor: Colors.red,
-        backgroundColor: Colors.red[200],
-        center: CircularPercentIndicator(
-          circularStrokeCap: CircularStrokeCap.round,
-          backgroundColor: Colors.yellow[200],
-          progressColor: Colors.amber,
-          animation: true,
-          radius:200,
-          percent: 0.4,
-          lineWidth: 20,
-          center: CircularPercentIndicator(
-            circularStrokeCap: CircularStrokeCap.round,
-            backgroundColor: Colors.green[200],
-            progressColor: Colors.green,
-            animation: true,
-            radius:160,
-            percent: 0.5,
-            lineWidth: 20,
-
-          ),
-
-        ),
-
-        ),
-    );
+    return Container();
   }
 
   /// LDAP
